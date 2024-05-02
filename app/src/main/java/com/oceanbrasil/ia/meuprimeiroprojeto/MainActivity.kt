@@ -1,9 +1,11 @@
-
+package com.oceanbrasil.ia.meuprimeiroprojeto
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,18 +29,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import com.oceanbrasil.ia.meuprimeiroprojeto.AlunoEntity
+import com.oceanbrasil.ia.meuprimeiroprojeto.AppDatabase
 import com.oceanbrasil.ia.meuprimeiroprojeto.ui.theme.MeuPrimeiroProjetoTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var alunoEntity: AlunoEntity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
         setContent {
             MeuPrimeiroProjetoTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.padding(), color = MaterialTheme.colorScheme.background) {
-//                    Greeting("Android")
-                    InputForm()
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val alunoName = viewModel.alunoName.collectAsState().value
+                        Text(text = alunoName)
+                    }
                 }
             }
         }
